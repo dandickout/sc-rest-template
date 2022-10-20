@@ -88,26 +88,22 @@ exports.handler = async (event, context) => {
   }
 
   // ++ Process Prep ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
+
 
 
   // ++ Process method ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   try {
     switch (event.httpMethod) {
         case 'DELETE':
-            //body = await dynamo.delete(JSON.parse(event.body)).promise();
             body = await db.collection(somecollection).deleteOne(singledocument).promise();
             break;
         case 'GET':
-            //body = await dynamo.scan({ TableName: event.queryStringParameters.TableName }).promise();
             body = await db.collection(somecollection).find(query).promise();
             break;
         case 'POST':
-            //body = await dynamo.put(JSON.parse(event.body)).promise();
             body = await db.collection(somecollection).insertOne(document).promise();
             break;
         case 'PUT':
-            //body = await dynamo.update(JSON.parse(event.body)).promise();
             body = await db.collection(somecollection).updateOne(document).promise();
             break;
         default:
