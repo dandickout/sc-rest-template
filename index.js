@@ -132,15 +132,17 @@ exports.handler = async (event, context) => {
 
 
   // ++ Process method ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const def_query = {"cust_org_id": cust_org_id};
+
   try {
     switch (event.httpMethod) {
       case 'DELETE':
-          body = await db.collection(MONGODB_COLL).deleteOne({"cust_org_id": cust_org_id});
+          body = await db.collection(MONGODB_COLL).deleteOne(def_query);
         break;
 
       case 'GET':
           if(cust_org_id){
-            body = await db.collection(MONGODB_COLL).findOne({"cust_org_id": cust_org_id});
+            body = await db.collection(MONGODB_COLL).findOne(def_query);
           }
           else if(user_id){
             body = await db.collection(MONGODB_COLL).findOne({"user_id": user_id});
@@ -166,7 +168,7 @@ exports.handler = async (event, context) => {
 
     case 'PUT':
           //get the existing document to update only new or changed sections
-          old_doc = await db.collection(MONGODB_COLL).findOne({"cust_org_id": cust_org_id});
+          old_doc = await db.collection(MONGODB_COLL).findOne(def_query);
           //get the current Date as ISO and log who and when record was updated
           template_doc.audit_trail = {
             update_at: date.toISOString(),
@@ -178,7 +180,7 @@ exports.handler = async (event, context) => {
           delete new_doc['_id'];
 
           //update all fields in the document
-          body = await db.collection(MONGODB_COLL).updateOne({"cust_org_id": cust_org_id}, {$set: new_doc});
+          body = await db.collection(MONGODB_COLL).updateOne(def_query, {$set: new_doc});
         break;
 
         default:
