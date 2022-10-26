@@ -3,7 +3,7 @@ const MongoClient = require("mongodb").MongoClient;
 const merge = require('deepmerge');
   
 //Get environmental variables
-let MONGODB_URI = process.env.MONGO_URI;
+let MONGODB_URI = process.env.MONGODB_URI;
 let MONGODB = process.env.MONGODB;
 let MONGODB_COLL = process.env.MONGODB_COLL;
 
@@ -111,30 +111,25 @@ exports.handler = async (event, context) => {
           throw new Error(`Unsupported method "${event.httpMethod}"`);
 
     } 
-  } catch (err) {
-      statusCode = '400';
-      body = err.message;
-  } finally {
-      body = JSON.stringify(body);
-  }
+ 
 
-  // ++ Process Prep ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ++ Process Prep ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  const date = new Date(Date.now());
-  //create template doc with placeholders for each section
-  let template_doc = {
-    cust_org_id: cust_org_id,
-    user_id : user_id,
-    cust_org_data: cust_org_data || {},
-    cust_org_prefs: cust_org_prefs || {},
-    audit_trail: audit_trail || {}
-  };
+    const date = new Date(Date.now());
+    //create template doc with placeholders for each section
+    let template_doc = {
+      cust_org_id: cust_org_id,
+      user_id : user_id,
+      cust_org_data: cust_org_data || {},
+      cust_org_prefs: cust_org_prefs || {},
+      audit_trail: audit_trail || {}
+    };
 
 
-  // ++ Process method ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  const def_query = {"cust_org_id": cust_org_id};
+    // ++ Process method ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    const def_query = {"cust_org_id": cust_org_id};
 
-  try {
+    
     switch (event.httpMethod) {
       case 'DELETE':
           body = await db.collection(MONGODB_COLL).deleteOne(def_query);
